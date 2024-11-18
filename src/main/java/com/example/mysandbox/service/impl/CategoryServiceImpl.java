@@ -49,6 +49,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public CategoryResponseDTO getCategoryBySlug(String slug) {
+        Category category = categoryRepository.findBySlug(slug).orElseThrow(() -> new RuntimeException("Category not found with slug: " + slug));
+        return categoryMapper.toDto(category);
+    }
+
+    @Override
     @Transactional
     public CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO dto) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));

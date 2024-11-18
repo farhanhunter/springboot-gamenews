@@ -4,6 +4,7 @@ import com.example.mysandbox.dto.request.ArticleRequestDTO;
 import com.example.mysandbox.dto.response.ArticleResponseDTO;
 import com.example.mysandbox.entity.Article;
 import com.example.mysandbox.entity.Category;
+import com.example.mysandbox.enums.ArticleStatus;
 import com.example.mysandbox.mapper.ArticleMapper;
 import com.example.mysandbox.repository.ArticleRepository;
 import com.example.mysandbox.repository.CategoryRepository;
@@ -32,6 +33,11 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleMapper.toEntity(dto);
         article.setCategory(category);
         article.setSlug(slugGenerator.generateSlug(dto.getTitle()));
+
+        if (ArticleStatus.PUBLISHED.equals(dto.getStatus())) {
+            article.setPublishedAt(article.getCreatedAt());
+        }
+
         Article savedArticle = articleRepository.save(article);
         return articleMapper.toDto(savedArticle);
     }
@@ -49,6 +55,23 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public ArticleResponseDTO getArticleByCategory(ArticleResponseDTO.CategoryDTO category) {
+        List<Article> articles = articleRepository.findByCategoryId(category.getId());
+        if (articles.isEmpty()) {
+            throw new RuntimeException("No articles found for category: " + category.getName());
+        }
+        return articleMapper.toDto(articles.get(0));
+    }
+
+    @Override
+    public List<ArticleResponseDTO> getAllPublishedArticles() {
+        return articleRepository.findAllPublished()
+                .stream()
+                .map(articleMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public ArticleResponseDTO updateArticle(Long id, ArticleRequestDTO dto) {
         Article article = articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
@@ -60,6 +83,11 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         articleMapper.updateEntity(dto, article);
+
+        if ("PUBLISHED".equals(dto.getStatus()) && article.getPublishedAt() == null) {
+            article.setPublishedAt(article.getCreatedAt());
+        }
+
         Article updated = articleRepository.save(article);
         return articleMapper.toDto(updated);
     }

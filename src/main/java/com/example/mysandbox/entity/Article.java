@@ -1,5 +1,6 @@
 package com.example.mysandbox.entity;
 
+import com.example.mysandbox.enums.ArticleStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -36,8 +37,9 @@ public class Article {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(nullable = false, length = 20)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ArticleStatus status = ArticleStatus.DRAFT;
 
     @Column(name = "view_count")
     private Integer viewCount = 0;

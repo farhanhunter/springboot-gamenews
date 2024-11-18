@@ -23,6 +23,12 @@ public class ArticleRestController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @GetMapping("/published")
+    public ResponseEntity<List<ArticleResponseDTO>> getAllPublishedArticles() {
+        List<ArticleResponseDTO> response = articleService.getAllPublishedArticles();
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ArticleResponseDTO> getArticleById(@PathVariable Long id) {
         try {
@@ -42,6 +48,18 @@ public class ArticleRestController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/category")
+    public ResponseEntity<ArticleResponseDTO> getArticleByCategory(@RequestBody @Valid ArticleResponseDTO.CategoryDTO request) {
+        try {
+            ArticleResponseDTO response = articleService.getArticleByCategory(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<ArticleResponseDTO> updateArticle(@PathVariable Long id, @RequestBody @Valid ArticleRequestDTO request) {
