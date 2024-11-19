@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +20,12 @@ public class ArticleRestController {
     private final ArticleService articleService;
 
     @PostMapping
-    public ResponseEntity<ArticleResponseDTO> createArticle(@RequestBody @Valid ArticleRequestDTO request) {
-        ArticleResponseDTO response = articleService.createArticle(request);
+    public ResponseEntity<ArticleResponseDTO> createArticle(
+            @RequestBody @Valid ArticleRequestDTO request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        String username = userDetails.getUsername();
+        ArticleResponseDTO response = articleService.createArticle(request, username);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -58,8 +64,6 @@ public class ArticleRestController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 
     @PutMapping("/{id}")
     public ResponseEntity<ArticleResponseDTO> updateArticle(@PathVariable Long id, @RequestBody @Valid ArticleRequestDTO request) {

@@ -3,6 +3,7 @@ package com.example.mysandbox.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -32,6 +33,9 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "author")
+    private List<Article> articles;
 
     @PrePersist
     protected void onCreate() {

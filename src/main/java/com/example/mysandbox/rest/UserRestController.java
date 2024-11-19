@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/auth/users")
+@RequestMapping("/game/users")
 @RequiredArgsConstructor
 public class UserRestController {
     private final UserService userService;

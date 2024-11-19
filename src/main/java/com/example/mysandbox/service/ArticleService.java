@@ -6,7 +6,7 @@ import com.example.mysandbox.dto.response.ArticleResponseDTO;
 import java.util.List;
 
 public interface ArticleService {
-    ArticleResponseDTO createArticle(ArticleRequestDTO dto);
+    ArticleResponseDTO createArticle(ArticleRequestDTO dto, String username);
     ArticleResponseDTO getArticle(Long id);
     ArticleResponseDTO getArticleBySlug(String slug);
     ArticleResponseDTO getArticleByCategory(ArticleResponseDTO.CategoryDTO category);
