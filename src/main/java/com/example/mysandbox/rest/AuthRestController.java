@@ -8,6 +8,7 @@ import com.example.mysandbox.security.JwtUtil;
 import com.example.mysandbox.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,26 +27,29 @@ public class AuthRestController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthRequestDTO request) {
-        // Authenticate
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
 
-        // Generate token
-        String token = jwtUtil.generateToken(request.getUsername());
-        return ResponseEntity.ok(new AuthResponseDTO(token));
+            String token = jwtUtil.generateToken(request.getUsername());
+            return ResponseEntity.ok(new AuthResponseDTO(token));
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid credentials: " + e.getMessage());
+        }
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> register(@RequestBody @Valid UserRequestDTO request) {
-        // Register and get user
-        UserResponseDTO user = userServiceImpl.createUser(request);
-
-        // Generate token
-        String token = jwtUtil.generateToken(user.getUsername());
-        return ResponseEntity.ok(new AuthResponseDTO(token));
+        try {
+            UserResponseDTO user = userServiceImpl.createUser(request);
+            String token = jwtUtil.generateToken(user.getUsername());
+            return ResponseEntity.ok(new AuthResponseDTO(token));
+        } catch (Exception e) {
+            throw new RuntimeException("Registration failed: " + e.getMessage());
+        }
     }
 }

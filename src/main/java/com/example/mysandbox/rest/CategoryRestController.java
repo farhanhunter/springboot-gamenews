@@ -19,37 +19,61 @@ public class CategoryRestController {
 
     @PostMapping
     public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody @Valid CategoryRequestDTO request) {
-        CategoryResponseDTO response = categoryService.createCategory(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        try {
+            CategoryResponseDTO response = categoryService.createCategory(request);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create category: " + e.getMessage());
+        }
     }
 
     @GetMapping
     public ResponseEntity<List<CategoryResponseDTO>> getAllCategories() {
-        List<CategoryResponseDTO> response = categoryService.getAllCategories();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            List<CategoryResponseDTO> response = categoryService.getAllCategories();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get categories: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> getCategory(@PathVariable Long id) {
-        CategoryResponseDTO response = categoryService.getCategory(id);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            CategoryResponseDTO response = categoryService.getCategory(id);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Category not found with id: " + id);
+        }
     }
 
     @GetMapping("/slug/{slug}")
     public ResponseEntity<CategoryResponseDTO> getCategoryBySlug(@PathVariable String slug) {
-        CategoryResponseDTO response = categoryService.getCategoryBySlug(slug);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            CategoryResponseDTO response = categoryService.getCategoryBySlug(slug);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Category not found with slug: " + slug);
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryRequestDTO request) {
-        CategoryResponseDTO response = categoryService.updateCategory(id, request);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            CategoryResponseDTO response = categoryService.updateCategory(id, request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update category: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategory(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            categoryService.deleteCategory(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete category: " + e.getMessage());
+        }
     }
 }

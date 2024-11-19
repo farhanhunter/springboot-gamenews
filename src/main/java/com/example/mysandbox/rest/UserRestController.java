@@ -19,8 +19,12 @@ public class UserRestController {
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO request) {
-        UserResponseDTO response = userService.createUser(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        try {
+            UserResponseDTO response = userService.createUser(request);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create user: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -29,7 +33,7 @@ public class UserRestController {
             UserResponseDTO response = userService.getUser(id);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("User not found with id: " + id);
         }
     }
 
@@ -39,7 +43,7 @@ public class UserRestController {
             UserResponseDTO response = userService.getUserByUsername(username);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("User not found with username: " + username);
         }
     }
 
@@ -49,14 +53,18 @@ public class UserRestController {
             UserResponseDTO response = userService.getUserByEmail(email);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("User not found with email: " + email);
         }
     }
 
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
-        List<UserResponseDTO> response = userService.getAllUsers();
-        return ResponseEntity.ok(response);
+        try {
+            List<UserResponseDTO> response = userService.getAllUsers();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get users: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -68,7 +76,7 @@ public class UserRestController {
             UserResponseDTO response = userService.updateUser(id, request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("Failed to update user: " + e.getMessage());
         }
     }
 
@@ -78,19 +86,27 @@ public class UserRestController {
             userService.deleteUser(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("Failed to delete user: " + e.getMessage());
         }
     }
 
     @GetMapping("/exists/username/{username}")
     public ResponseEntity<Boolean> existsByUsername(@PathVariable String username) {
-        boolean exists = userService.existsByUsername(username);
-        return ResponseEntity.ok(exists);
+        try {
+            boolean exists = userService.existsByUsername(username);
+            return ResponseEntity.ok(exists);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to check if user exists: " + e.getMessage());
+        }
     }
 
     @GetMapping("/exists/email/{email}")
     public ResponseEntity<Boolean> existsByEmail(@PathVariable String email) {
-        boolean exists = userService.existsByEmail(email);
-        return ResponseEntity.ok(exists);
+        try {
+            boolean exists = userService.existsByEmail(email);
+            return ResponseEntity.ok(exists);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to check if user exists: " + e.getMessage());
+        }
     }
 }

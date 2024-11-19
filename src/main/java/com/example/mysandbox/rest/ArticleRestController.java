@@ -23,16 +23,25 @@ public class ArticleRestController {
     public ResponseEntity<ArticleResponseDTO> createArticle(
             @RequestBody @Valid ArticleRequestDTO request,
             @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            String username = userDetails.getUsername();
+            ArticleResponseDTO response = articleService.createArticle(request, username);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
 
-        String username = userDetails.getUsername();
-        ArticleResponseDTO response = articleService.createArticle(request, username);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+            throw new RuntimeException("Failed to create article: " + e.getMessage());
+        }
     }
+
 
     @GetMapping("/published")
     public ResponseEntity<List<ArticleResponseDTO>> getAllPublishedArticles() {
-        List<ArticleResponseDTO> response = articleService.getAllPublishedArticles();
-        return ResponseEntity.ok(response);
+        try {
+            List<ArticleResponseDTO> response = articleService.getAllPublishedArticles();
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get published articles: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -41,7 +50,7 @@ public class ArticleRestController {
             ArticleResponseDTO response = articleService.getArticle(id);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("Article not found with id: " + id);
         }
     }
 
@@ -51,7 +60,7 @@ public class ArticleRestController {
             ArticleResponseDTO response = articleService.getArticleBySlug(slug);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("Article not found with slug: " + slug);
         }
     }
 
@@ -61,7 +70,7 @@ public class ArticleRestController {
             ArticleResponseDTO response = articleService.getArticleByCategory(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("Something went wrong " + request);
         }
     }
 
@@ -71,7 +80,7 @@ public class ArticleRestController {
             ArticleResponseDTO response = articleService.updateArticle(id, request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("Failed to update article: " + e.getMessage());
         }
     }
 
@@ -81,13 +90,17 @@ public class ArticleRestController {
             articleService.deleteArticle(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("Failed to delete article: " + e.getMessage());
         }
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<ArticleResponseDTO>> searchArticles(@RequestParam String query) {
-        List<ArticleResponseDTO> response = articleService.searchArticles(query);
-        return ResponseEntity.ok(response);
+        try {
+            List<ArticleResponseDTO> response = articleService.searchArticles(query);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to search articles: " + e.getMessage());
+        }
     }
 }
