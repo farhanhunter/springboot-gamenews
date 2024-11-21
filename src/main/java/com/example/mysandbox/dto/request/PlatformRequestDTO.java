@@ -1,10 +1,11 @@
 package com.example.mysandbox.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import com.example.mysandbox.enums.PlatformType;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class PlatformRequestDTO {
-    @NotBlank(message = "Name is mandatory")
-    private String name;
+    @NotNull(message = "Platform type is mandatory")
+    private PlatformType name;
 }

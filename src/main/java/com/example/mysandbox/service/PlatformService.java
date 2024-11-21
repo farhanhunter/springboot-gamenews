@@ -6,10 +6,7 @@ import com.example.mysandbox.dto.response.PlatformResponseDTO;
 import java.util.List;
 
 public interface PlatformService {
-    PlatformResponseDTO createPlatform(PlatformRequestDTO dto);
+    List<PlatformResponseDTO> getAllPlatforms();
     PlatformResponseDTO getPlatform(Long id);
     PlatformResponseDTO getPlatformBySlug(String slug);
-    List<PlatformResponseDTO> getAllPlatforms();
-    PlatformResponseDTO updatePlatform(Long id, PlatformRequestDTO dto);
-    void deletePlatform(Long id);
 }

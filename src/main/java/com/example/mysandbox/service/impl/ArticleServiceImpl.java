@@ -4,11 +4,13 @@ import com.example.mysandbox.dto.request.ArticleRequestDTO;
 import com.example.mysandbox.dto.response.ArticleResponseDTO;
 import com.example.mysandbox.entity.Article;
 import com.example.mysandbox.entity.Category;
+import com.example.mysandbox.entity.Platform;
 import com.example.mysandbox.entity.User;
 import com.example.mysandbox.enums.ArticleStatus;
 import com.example.mysandbox.mapper.ArticleMapper;
 import com.example.mysandbox.repository.ArticleRepository;
 import com.example.mysandbox.repository.CategoryRepository;
+import com.example.mysandbox.repository.PlatformRepository;
 import com.example.mysandbox.repository.UserRepository;
 import com.example.mysandbox.service.ArticleService;
 import com.example.mysandbox.util.SlugGenerator;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,30 +31,47 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleMapper articleMapper;
     private final SlugGenerator slugGenerator;
     private final CategoryRepository categoryRepository;
+    private final PlatformRepository platformRepository;
 
     @Override
     @Transactional
     public ArticleResponseDTO createArticle(ArticleRequestDTO dto, String username) {
+        // 1. Validasi User
         User author = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Validasi dan get category
+        // 2. Validasi Category
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        // Convert ke entity
+        // 3. Convert ke entity
         Article article = articleMapper.toEntity(dto);
 
-        // Set category dan slug
+        // 4. Set data wajib
         article.setCategory(category);
         article.setAuthor(author);
         article.setSlug(slugGenerator.generateSlug(dto.getTitle()));
 
-        // Set publishedAt jika status PUBLISHED
+        // Set platforms dengan validasi
+        if (dto.getPlatformsIds() != null && !dto.getPlatformsIds().isEmpty()) {
+            Set<Platform> platforms = platformRepository.findAllById(dto.getPlatformsIds())
+                    .stream()
+                    .collect(Collectors.toSet());
+
+            // Validasi apakah semua platform ditemukan
+            if (platforms.size() != dto.getPlatformsIds().size()) {
+                throw new RuntimeException("One or more platforms not found");
+            }
+
+            article.setPlatforms(platforms);
+        }
+
+        // 6. Handle status dan publishedAt
         if (ArticleStatus.PUBLISHED.equals(dto.getStatus())) {
             article.setPublishedAt(LocalDateTime.now());
         }
 
+        // 7. Save dan return
         Article savedArticle = articleRepository.save(article);
         return articleMapper.toDto(savedArticle);
     }
@@ -98,10 +118,21 @@ public class ArticleServiceImpl implements ArticleService {
             existingArticle.setCategory(category);
         }
 
+        // Update platforms jika ada
+        if (dto.getPlatformsIds() != null) {
+            Set<Platform> platforms = platformRepository.findAllById(dto.getPlatformsIds())
+                    .stream()
+                    .collect(Collectors.toSet());
+            if (!dto.getPlatformsIds().isEmpty() && platforms.size() != dto.getPlatformsIds().size()) {
+                throw new RuntimeException("One or more platforms not found");
+            }
+            existingArticle.setPlatforms(platforms);
+        }
+
         // Update basic info
         articleMapper.updateEntity(dto, existingArticle);
 
-        // Set publishedAt jika berubah ke PUBLISHED dan belum pernah dipublish
+        // Set publishedAt jika berubah ke PUBLISHED
         if (ArticleStatus.PUBLISHED.equals(dto.getStatus()) &&
                 existingArticle.getPublishedAt() == null) {
             existingArticle.setPublishedAt(LocalDateTime.now());

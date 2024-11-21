@@ -19,6 +19,12 @@ public class Tag {
     @Column(unique = true, nullable = false, length = 50)
     private String slug;
 
+    @Column(name = "is_verified")
+    private Boolean isVerified = false;
+
+    @Column(name = "usage_count")
+    private Integer usageCount = 0;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

@@ -1,5 +1,7 @@
 package com.example.mysandbox.dto.response;
 
+import com.example.mysandbox.dto.request.PlatformRequestDTO;
+import com.example.mysandbox.dto.request.TagRequestDTO;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -22,8 +24,8 @@ public class ArticleResponseDTO {
     // Nested DTOs for related entities
     private AuthorDTO author;
     private CategoryDTO category;
-    private Set<PlatformDTO> platforms;
-    private Set<TagDTO> tags;
+    private Set<PlatformRequestDTO> platforms;
+    private Set<TagRequestDTO> tags;
 
     // Nested DTO classes
     @Data
@@ -35,20 +37,6 @@ public class ArticleResponseDTO {
 
     @Data
     public static class CategoryDTO {
-        private Long id;
-        private String name;
-        private String slug;
-    }
-
-    @Data
-    public static class PlatformDTO {
-        private Long id;
-        private String name;
-        private String slug;
-    }
-
-    @Data
-    public static class TagDTO {
         private Long id;
         private String name;
         private String slug;

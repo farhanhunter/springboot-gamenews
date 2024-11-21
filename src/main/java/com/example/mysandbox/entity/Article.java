@@ -4,6 +4,7 @@ import com.example.mysandbox.enums.ArticleStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -59,7 +60,7 @@ public class Article {
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "platform_id")
     )
-    private Set<Platform> platforms;
+    private Set<Platform> platforms = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
