@@ -1,10 +1,12 @@
 package com.example.mysandbox.dto.request;
 
+import com.example.mysandbox.enums.TagType;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class TagRequestDTO {
-    @NotBlank(message = "Name is mandatory")
-    private String name;
+    @NotNull(message = "TagType is mandatory")
+    private TagType name;
 }

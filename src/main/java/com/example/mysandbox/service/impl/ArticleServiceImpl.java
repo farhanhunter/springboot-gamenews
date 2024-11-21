@@ -2,16 +2,10 @@ package com.example.mysandbox.service.impl;
 
 import com.example.mysandbox.dto.request.ArticleRequestDTO;
 import com.example.mysandbox.dto.response.ArticleResponseDTO;
-import com.example.mysandbox.entity.Article;
-import com.example.mysandbox.entity.Category;
-import com.example.mysandbox.entity.Platform;
-import com.example.mysandbox.entity.User;
+import com.example.mysandbox.entity.*;
 import com.example.mysandbox.enums.ArticleStatus;
 import com.example.mysandbox.mapper.ArticleMapper;
-import com.example.mysandbox.repository.ArticleRepository;
-import com.example.mysandbox.repository.CategoryRepository;
-import com.example.mysandbox.repository.PlatformRepository;
-import com.example.mysandbox.repository.UserRepository;
+import com.example.mysandbox.repository.*;
 import com.example.mysandbox.service.ArticleService;
 import com.example.mysandbox.util.SlugGenerator;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +26,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final SlugGenerator slugGenerator;
     private final CategoryRepository categoryRepository;
     private final PlatformRepository platformRepository;
+    private final TagRepository tagRepository;
 
     @Override
     @Transactional
@@ -64,6 +59,19 @@ public class ArticleServiceImpl implements ArticleService {
             }
 
             article.setPlatforms(platforms);
+        }
+
+        // Set tags dengan validasi
+        if (dto.getTagsIds() != null && !dto.getTagsIds().isEmpty()) {
+            Set<Tag> tags = tagRepository.findAllById(dto.getTagsIds())
+                    .stream()
+                    .collect(Collectors.toSet());
+
+            if (tags.size() != dto.getTagsIds().size()) {
+                throw new RuntimeException("One or more tags not found");
+            }
+
+            article.setTags(tags);
         }
 
         // 6. Handle status dan publishedAt
@@ -127,6 +135,17 @@ public class ArticleServiceImpl implements ArticleService {
                 throw new RuntimeException("One or more platforms not found");
             }
             existingArticle.setPlatforms(platforms);
+        }
+
+        // Update tags jika ada
+        if (dto.getTagsIds() != null) {
+            Set<Tag> tags = tagRepository.findAllById(dto.getTagsIds())
+                    .stream()
+                    .collect(Collectors.toSet());
+            if (!dto.getTagsIds().isEmpty() && tags.size() != dto.getTagsIds().size()) {
+                throw new RuntimeException("One or more tags not found");
+            }
+            existingArticle.setTags(tags);
         }
 
         // Update basic info

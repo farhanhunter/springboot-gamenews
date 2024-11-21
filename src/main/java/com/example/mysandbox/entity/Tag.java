@@ -1,5 +1,6 @@
 package com.example.mysandbox.entity;
 
+import com.example.mysandbox.enums.TagType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,17 +14,12 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TagType name;
 
     @Column(unique = true, nullable = false, length = 50)
     private String slug;
-
-    @Column(name = "is_verified")
-    private Boolean isVerified = false;
-
-    @Column(name = "usage_count")
-    private Integer usageCount = 0;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -31,5 +27,12 @@ public class Tag {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        if (this.slug == null && this.name != null) {
+            this.slug = this.name.name().toLowerCase().replace("_", "-");
+        }
+    }
+
+    public String getDisplayName() {
+        return name != null ? name.getDisplayName() : null;
     }
 }

@@ -1,6 +1,5 @@
 package com.example.mysandbox.service;
 
-import com.example.mysandbox.dto.request.PlatformRequestDTO;
 import com.example.mysandbox.dto.response.PlatformResponseDTO;
 
 import java.util.List;

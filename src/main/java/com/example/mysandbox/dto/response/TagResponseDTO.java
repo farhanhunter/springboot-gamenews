@@ -9,5 +9,6 @@ public class TagResponseDTO {
     private Long id;
     private String name;
     private String slug;
+    private String displayName;
     private LocalDateTime createdAt;
 }

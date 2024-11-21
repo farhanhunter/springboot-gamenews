@@ -1,16 +1,17 @@
 package com.example.mysandbox.enums;
 
 public enum TagType {
-    RELAXING("Relaxing"),
-    LIFE_SIM("Life Sim"),
-    CHARACTER_CUSTOMIZATION("Character Customization"),
-    EXPLORATION("Exploration"),
     ADVENTURE("Adventure"),
-    SIMULATION("Simulation"),
-    SANDBOX("Sandbox"),
+    RPG("RPG"),
+    ACTION("Action"),
+    OPEN_WORLD("Open World"),
+    SURVIVAL("Survival"),
+    MULTIPLAYER("Multiplayer"),
     SINGLEPLAYER("Singleplayer"),
-    FANTASY("Fantasy"),
+    STRATEGY("Strategy"),
+    SIMULATION("Simulation"),
     CASUAL("Casual"),
+    INDIE("Indie"),
     STORY_RICH("Story Rich");
 
     private final String displayName;

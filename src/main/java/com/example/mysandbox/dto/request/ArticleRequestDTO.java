@@ -26,8 +26,6 @@ public class ArticleRequestDTO {
 
     private Set<Long> tagsIds;
 
-    private Set<String> newTags;
-
     @NotNull(message = "Status is mandatory")
     private ArticleStatus status = ArticleStatus.DRAFT;
 }

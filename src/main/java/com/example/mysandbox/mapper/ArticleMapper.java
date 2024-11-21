@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {CategoryMapper.class, PlatformMapper.class})
+@Mapper(componentModel = "spring", uses = {CategoryMapper.class, PlatformMapper.class, TagMapper.class})
 public interface ArticleMapper {
 
     @Mapping(target = "id", ignore = true)
