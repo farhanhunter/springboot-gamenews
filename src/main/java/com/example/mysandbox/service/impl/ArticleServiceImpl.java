@@ -1,6 +1,7 @@
 package com.example.mysandbox.service.impl;
 
 import com.example.mysandbox.dto.request.ArticleRequestDTO;
+import com.example.mysandbox.dto.request.CategoryRequestDTO;
 import com.example.mysandbox.dto.response.ArticleResponseDTO;
 import com.example.mysandbox.entity.*;
 import com.example.mysandbox.enums.ArticleStatus;
@@ -36,16 +37,26 @@ public class ArticleServiceImpl implements ArticleService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // 2. Validasi Category
-        Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
 
         // 3. Convert ke entity
         Article article = articleMapper.toEntity(dto);
 
         // 4. Set data wajib
-        article.setCategory(category);
         article.setAuthor(author);
         article.setSlug(slugGenerator.generateSlug(dto.getTitle()));
+
+        // Set categories dengan validasi
+        if (dto.getCategoriesIds() != null && !dto.getCategoriesIds().isEmpty()) {
+            Set<Category> categories = categoryRepository.findAllById(dto.getCategoriesIds())
+                    .stream()
+                    .collect(Collectors.toSet());
+
+            if (categories.size() != dto.getCategoriesIds().size()) {
+                throw new RuntimeException("One or more categories not found");
+            }
+
+            article.setCategories(categories);
+        }
 
         // Set platforms dengan validasi
         if (dto.getPlatformsIds() != null && !dto.getPlatformsIds().isEmpty()) {
@@ -96,17 +107,19 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.toDto(article);
     }
 
-    @Override
-    public ArticleResponseDTO getArticleByCategory(ArticleResponseDTO.CategoryDTO category) {
-        List<Article> articles = articleRepository.findByCategoryId(category.getId());
-        if (articles.isEmpty()) {
-            throw new RuntimeException("No articles found for category: " + category.getName());
-        }
-        return articleMapper.toDto(articles.get(0));
-    }
+//    @Override
+//    public ArticleResponseDTO getArticleByCategory(CategoryRequestDTO category) {
+//        List<Article> articles = articleRepository.findByCategoryName(category.getName());
+//        if (articles.isEmpty()) {
+//            throw new RuntimeException("No articles found for category: " + category.getName());
+//        }
+//        return articleMapper.toDto(articles.get(0));
+//    }
 
     @Override
     public List<ArticleResponseDTO> getAllPublishedArticles() {
+        List<Article> test = articleRepository.findAllPublished();
+
         return articleRepository.findAllPublished()
                 .stream()
                 .map(articleMapper::toDto)
@@ -120,10 +133,14 @@ public class ArticleServiceImpl implements ArticleService {
                 .orElseThrow(() -> new RuntimeException("Article not found"));
 
         // Update category jika ada
-        if (dto.getCategoryId() != null) {
-            Category category = categoryRepository.findById(dto.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
-            existingArticle.setCategory(category);
+        if (dto.getCategoriesIds() != null) {
+            Set<Category> categories = categoryRepository.findAllById(dto.getCategoriesIds())
+                    .stream()
+                    .collect(Collectors.toSet());
+            if (!dto.getCategoriesIds().isEmpty() && categories.size() != dto.getCategoriesIds().size()) {
+                throw new RuntimeException("One or more categories not found");
+            }
+            existingArticle.setCategories(categories);
         }
 
         // Update platforms jika ada

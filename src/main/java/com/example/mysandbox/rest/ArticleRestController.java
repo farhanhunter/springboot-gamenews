@@ -1,6 +1,7 @@
 package com.example.mysandbox.rest;
 
 import com.example.mysandbox.dto.request.ArticleRequestDTO;
+import com.example.mysandbox.dto.request.CategoryRequestDTO;
 import com.example.mysandbox.dto.response.ArticleResponseDTO;
 import com.example.mysandbox.service.ArticleService;
 import jakarta.validation.Valid;
@@ -61,16 +62,6 @@ public class ArticleRestController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             throw new RuntimeException("Article not found with slug: " + slug);
-        }
-    }
-
-    @GetMapping("/category")
-    public ResponseEntity<ArticleResponseDTO> getArticleByCategory(@RequestBody @Valid ArticleResponseDTO.CategoryDTO request) {
-        try {
-            ArticleResponseDTO response = articleService.getArticleByCategory(request);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            throw new RuntimeException("Something went wrong " + request);
         }
     }
 

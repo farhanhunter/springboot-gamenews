@@ -18,13 +18,13 @@ public interface ArticleMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "viewCount", ignore = true)
     @Mapping(target = "publishedAt", ignore = true)
-    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "categories", ignore = true)
     @Mapping(target = "platforms", ignore = true)
     @Mapping(target = "tags", ignore = true)
     Article toEntity(ArticleRequestDTO dto);
 
     @Mapping(target = "author", source = "author")
-    @Mapping(target = "category", source = "category")
+    @Mapping(target = "categories", source = "categories")
     @Mapping(target = "platforms", source = "platforms")
     @Mapping(target = "tags", source = "tags")
     ArticleResponseDTO toDto(Article entity);
@@ -34,7 +34,7 @@ public interface ArticleMapper {
     @Mapping(target = "author", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "categories", ignore = true)
     @Mapping(target = "platforms", ignore = true)
     @Mapping(target = "tags", ignore = true)
     void updateEntity(ArticleRequestDTO dto, @MappingTarget Article entity);

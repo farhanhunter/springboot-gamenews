@@ -1,7 +1,6 @@
 package com.example.mysandbox.dto.request;
 
 import com.example.mysandbox.enums.TagType;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

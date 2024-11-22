@@ -26,8 +26,8 @@ public class Platform {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToMany(mappedBy = "platforms")
-    private Set<Article> articles = new HashSet<>();
+//    @ManyToMany(mappedBy = "platforms")
+//    private Set<Article> articles = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {

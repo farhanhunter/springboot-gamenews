@@ -1,12 +1,11 @@
 package com.example.mysandbox.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import com.example.mysandbox.enums.CategoryType;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class CategoryRequestDTO {
-    @NotBlank(message = "Name is mandatory")
-    private String name;
-
-    private String description;
+    @NotNull(message = "Category type is mandatory")
+    private CategoryType name;
 }

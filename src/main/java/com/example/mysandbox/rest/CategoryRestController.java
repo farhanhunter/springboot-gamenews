@@ -17,15 +17,6 @@ import java.util.List;
 public class CategoryRestController {
     private final CategoryService categoryService;
 
-    @PostMapping
-    public ResponseEntity<CategoryResponseDTO> createCategory(@RequestBody @Valid CategoryRequestDTO request) {
-        try {
-            CategoryResponseDTO response = categoryService.createCategory(request);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create category: " + e.getMessage());
-        }
-    }
 
     @GetMapping
     public ResponseEntity<List<CategoryResponseDTO>> getAllCategories() {
@@ -57,23 +48,4 @@ public class CategoryRestController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryRequestDTO request) {
-        try {
-            CategoryResponseDTO response = categoryService.updateCategory(id, request);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to update category: " + e.getMessage());
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        try {
-            categoryService.deleteCategory(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to delete category: " + e.getMessage());
-        }
-    }
 }

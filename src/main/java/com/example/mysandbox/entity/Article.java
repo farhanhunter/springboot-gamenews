@@ -34,10 +34,6 @@ public class Article {
     @JoinColumn(name = "author_id")
     private User author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ArticleStatus status = ArticleStatus.DRAFT;
@@ -55,12 +51,18 @@ public class Article {
     private LocalDateTime updatedAt;
 
     @ManyToMany
+    @JoinTable(name = "article_categories",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories;
+
+    @ManyToMany
     @JoinTable(
             name = "article_platforms",
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "platform_id")
     )
-    private Set<Platform> platforms = new HashSet<>();
+    private Set<Platform> platforms;
 
     @ManyToMany
     @JoinTable(

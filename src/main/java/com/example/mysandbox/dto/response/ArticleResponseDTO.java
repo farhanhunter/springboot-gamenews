@@ -1,7 +1,9 @@
 package com.example.mysandbox.dto.response;
 
+import com.example.mysandbox.dto.request.CategoryRequestDTO;
 import com.example.mysandbox.dto.request.PlatformRequestDTO;
 import com.example.mysandbox.dto.request.TagRequestDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -23,7 +25,7 @@ public class ArticleResponseDTO {
 
     // Nested DTOs for related entities
     private AuthorDTO author;
-    private CategoryDTO category;
+    private Set<CategoryRequestDTO> categories;
     private Set<PlatformRequestDTO> platforms;
     private Set<TagRequestDTO> tags;
 
@@ -33,12 +35,5 @@ public class ArticleResponseDTO {
         private Long id;
         private String username;
         private String fullName;
-    }
-
-    @Data
-    public static class CategoryDTO {
-        private Long id;
-        private String name;
-        private String slug;
     }
 }

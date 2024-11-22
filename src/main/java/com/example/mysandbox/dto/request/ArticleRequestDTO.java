@@ -19,8 +19,7 @@ public class ArticleRequestDTO {
 
     private String featuredImage;
 
-    @NotNull(message = "Category is mandatory")
-    private Long categoryId;
+    private Set<Long> categoriesIds;
 
     private Set<Long> platformsIds;
 
