@@ -1,5 +1,6 @@
 package com.example.mysandbox.dto.response;
 
+import com.example.mysandbox.enums.UserStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ public class UserResponseDTO {
     private String email;
     private String fullName;
     private String role;
+    private UserStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
