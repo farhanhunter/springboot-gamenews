@@ -1,11 +1,18 @@
 package com.example.mysandbox.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = "articles")
+@EqualsAndHashCode(exclude = "articles")
 @Entity
 @Table(name = "users")
 public class User {

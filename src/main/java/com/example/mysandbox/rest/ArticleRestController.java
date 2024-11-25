@@ -34,7 +34,6 @@ public class ArticleRestController {
         }
     }
 
-
     @GetMapping("/published")
     public ResponseEntity<List<ArticleResponseDTO>> getAllPublishedArticles() {
         try {

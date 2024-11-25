@@ -2,12 +2,18 @@ package com.example.mysandbox.entity;
 
 import com.example.mysandbox.enums.ArticleStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"author", "categories", "platforms", "tags"})
+@EqualsAndHashCode(exclude = {"author", "categories", "platforms", "tags"})
 @Entity
 @Table(name = "articles")
 public class Article {
