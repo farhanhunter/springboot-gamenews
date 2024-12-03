@@ -11,20 +11,13 @@ import java.util.Set;
 public class ArticleRequestDTO {
     @NotBlank(message = "Title is mandatory")
     private String title;
-
     @NotBlank(message = "Content is mandatory")
     private String content;
-
     private String excerpt;
-
     private String featuredImage;
-
     private Set<Long> categoriesIds;
-
     private Set<Long> platformsIds;
-
     private Set<Long> tagsIds;
-
     @NotNull(message = "Status is mandatory")
     private ArticleStatus status = ArticleStatus.DRAFT;
 }
