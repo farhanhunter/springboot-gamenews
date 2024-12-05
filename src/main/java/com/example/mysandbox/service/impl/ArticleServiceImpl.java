@@ -10,6 +10,8 @@ import com.example.mysandbox.repository.*;
 import com.example.mysandbox.service.ArticleService;
 import com.example.mysandbox.util.SlugGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,13 +119,9 @@ public class ArticleServiceImpl implements ArticleService {
 //    }
 
     @Override
-    public List<ArticleResponseDTO> getAllPublishedArticles() {
-        List<Article> test = articleRepository.findAllPublished();
-
-        return articleRepository.findAllPublished()
-                .stream()
-                .map(articleMapper::toDto)
-                .collect(Collectors.toList());
+    public Page<ArticleResponseDTO> getAllPublishedArticles(Pageable pageable) {
+        return articleRepository.findAllPublished(pageable)
+                .map(articleMapper::toDto);
     }
 
     @Override

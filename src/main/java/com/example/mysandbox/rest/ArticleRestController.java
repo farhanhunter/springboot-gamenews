@@ -6,6 +6,8 @@ import com.example.mysandbox.dto.response.ArticleResponseDTO;
 import com.example.mysandbox.service.ArticleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,9 +37,9 @@ public class ArticleRestController {
     }
 
     @GetMapping("/published")
-    public ResponseEntity<List<ArticleResponseDTO>> getAllPublishedArticles() {
+    public ResponseEntity<Page<ArticleResponseDTO>> getAllPublishedArticles(Pageable pageable) {
         try {
-            List<ArticleResponseDTO> response = articleService.getAllPublishedArticles();
+            Page<ArticleResponseDTO> response = articleService.getAllPublishedArticles(pageable);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             throw new RuntimeException("Failed to get published articles: " + e.getMessage());
@@ -45,7 +47,7 @@ public class ArticleRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ArticleResponseDTO> getArticleById(@PathVariable Long id) {
+    public ResponseEntity<ArticleResponseDTO> getArticle(@PathVariable Long id) {
         try {
             ArticleResponseDTO response = articleService.getArticle(id);
             return ResponseEntity.ok(response);
